@@ -19,12 +19,9 @@ import { Role } from "../../../constants";
 const Login = () => {
   const navigate = useNavigate();
   const { user, setUser } = useContext(AuthContext);
-
-  console.log(user);
-
   useEffect(() => {
     if (user) {
-      switch (user.roleName) {
+      switch (user.role) {
         case Role.owner:
           navigate("/admin/diem-giao-dich");
           break;
@@ -54,7 +51,6 @@ const Login = () => {
       setUser(res);
       localStorage.setItem("user", JSON.stringify(res));
     } catch (error) {
-      console.log(error);
       notification.error({
         message: error?.response?.data?.message ?? error.message,
         duration: 1,

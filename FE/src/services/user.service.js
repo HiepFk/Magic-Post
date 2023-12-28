@@ -37,6 +37,9 @@ const getUsers = (keyword) => {
   });
 };
 
+const getUserByRole = (role) => {
+  return instance.get(`${url}/getUserByRole/${role}`);
+};
 const getUserById = (id) => {
   return instance.get(`${url}/${id}`);
 };
@@ -55,6 +58,7 @@ const UserService = {
   getUsers,
   getUserById,
   deleteUserById,
+  getUserByRole,
 };
 
 export default UserService;

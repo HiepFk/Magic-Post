@@ -66,7 +66,7 @@ const AccountsManage = () => {
         title: "Chức vụ",
         dataIndex: "role",
         render: (_, record) => {
-          return RoleName[record.roleName];
+          return RoleName[record.role?.name];
         },
       },
       {

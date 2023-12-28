@@ -66,6 +66,7 @@ const AdminDashboard = () => {
       {
         title: "Tên người quản lý",
         dataIndex: "managerGather",
+        render: (record) => <span>{record?.username}</span>,
       },
       {
         title: "Thao tác",

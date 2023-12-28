@@ -68,7 +68,6 @@ exports.signin = (req, res) => {
     .populate("role", "-__v")
     .exec((err, user) => {
       if (err) {
-        console.log(err);
         res.status(500).send({ message: err });
         return;
       }
@@ -102,14 +101,12 @@ exports.signin = (req, res) => {
 
       //req.session.token = token;
 
-      console.log(user);
-
       res.status(200).send({
         id: user._id,
         username: user.username,
         email: user.email,
         accessToken: token,
-        roleName: user.roleName,
+        role: user.role.name,
         message: "Signin successfully!",
       });
     });

@@ -4,6 +4,7 @@ import managers from "../../../utils/fakeData/Manager";
 import gatheringLocations from "../../../utils/fakeData/GatheringLocation";
 import * as GatheringLocationService from "../../../services/gatherLocation.service";
 import { notiMessages } from "../../../constants/messages";
+import UserService from "../../../services/user.service";
 
 export default function GatheringLocationForm({
   title,
@@ -25,11 +26,11 @@ export default function GatheringLocationForm({
   }, [id]);
 
   const getGatherManagerOptions = async () => {
-    const res = [...managers];
+    const res = await UserService.getUserByRole("managerGather");
 
     const opts = res.map((manager) => {
       return {
-        value: manager.username,
+        value: manager._id,
         label: manager.username,
       };
     });
@@ -122,7 +123,7 @@ export default function GatheringLocationForm({
           <Input disabled={!isEdit && id} />
         </Form.Item>
         <Form.Item
-          name="managerNameGather"
+          name="managerGather"
           label="Quản lý"
           rules={[{ required: true }]}
         >

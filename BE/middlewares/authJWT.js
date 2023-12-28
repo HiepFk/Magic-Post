@@ -14,7 +14,6 @@ verifyToken = (req, res, next) => {
 
   jwt.verify(token, config.secret, (err, decoded) => {
     if (err) {
-      console.log(err);
       return res.status(401).send({
         message: "Unauthorized!",
       });
@@ -201,7 +200,7 @@ isStaffGather = (req, res, next) => {
 
 restrictTo = (...roles) => {
   return (req, res, next) => {
-    if (!roles.includes(req.user.roleName)) {
+    if (!roles.includes(req.user.role.name)) {
       res.status(403).json({
         status: "error",
         message: "You do not have permission to perform this action",

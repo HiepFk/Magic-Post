@@ -42,10 +42,9 @@ const TransLocalManage = () => {
   }, []);
 
   const getData = async (keyword) => {
-    console.log(22222);
-
     try {
       const res = await TransLocalService.getTransLocals(keyword);
+      console.log(res);
       setData(res);
     } catch (error) {
       const res = transLocaltions;
@@ -70,8 +69,8 @@ const TransLocalManage = () => {
       {
         title: "Tên người quản lý",
         dataIndex: "managerTrans",
-        render: (_, record) => {
-          return record?.managerTrans?.username;
+        render: (record) => {
+          return record?.username;
         },
       },
       {

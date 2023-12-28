@@ -4,6 +4,8 @@ const router = require("express").Router();
 
 router.route("/").get(controlUser.showAllUser).delete(controlUser.deleteAll);
 
+router.route("/getUserByRole/:role").get(controlUser.getUserByRole);
+
 router.route("/").post(controlUser.createUser);
 router
   .route("/:id")

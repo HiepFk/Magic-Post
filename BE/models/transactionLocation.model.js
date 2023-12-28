@@ -31,7 +31,7 @@ TransactionLocationSchema.pre(/^find/, function (next) {
     select: "nameGather",
   }).populate({
     path: "managerTrans",
-    select: "name",
+    select: "username",
   });
   next();
 });

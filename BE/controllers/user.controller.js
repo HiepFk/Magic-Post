@@ -35,6 +35,19 @@ exports.adminBoard = (req, res) => {
   res.status(200).send("Admin Content.");
 };
 
+exports.getUserByRole = async (req, res) => {
+  const role = await Role.findOne({ name: req.params.role });
+  User.find({ role: role?._id })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving staffGather.",
+      });
+    });
+};
 exports.showAllUser = (req, res) => {
   if (req.query.keyword) {
     User.find({ username: req.query.keyword })
@@ -63,48 +76,70 @@ exports.createUser = (req, res) => {
       res.status(500).send({ message: err });
       return;
     }
-
-    if (req.body.roles) {
-      Role.find(
-        {
-          name: { $in: req.body.roles },
-        },
-        (err, roles) => {
-          if (err) {
-            res.status(500).send({ message: err });
-            return;
-          }
-
-          user.roles = roles.map((role) => role._id);
-          user.save((err) => {
-            if (err) {
-              res.status(500).send({ message: err });
-              return;
-            }
-
-            //res.send({ message: "User was registered successfully!" });
-          });
-        }
-      );
-    } else {
-      Role.findOne({ name: user.roleName }, (err, role) => {
+    Role.findOne(
+      {
+        name: req.body.role,
+      },
+      (err, role) => {
         if (err) {
           res.status(500).send({ message: err });
           return;
         }
 
-        user.roles = role._id;
+        user.role = role._id;
         user.save((err) => {
           if (err) {
             res.status(500).send({ message: err });
             return;
           }
-          //gửi mật khẩu và tài khoản về email.
 
-          res.send({ message: "Create user successfully!" });
+          //res.send({ message: "User was registered successfully!" });
         });
-      });
-    }
+      }
+    );
+    res.send({ message: "Create user successfully!" });
+
+    // if (req.body.roles) {
+    //   Role.find(
+    //     {
+    //       name: { $in: req.body.roles },
+    //     },
+    //     (err, roles) => {
+    //       if (err) {
+    //         res.status(500).send({ message: err });
+    //         return;
+    //       }
+
+    //       user.roles = roles.map((role) => role._id);
+    //       user.save((err) => {
+    //         if (err) {
+    //           res.status(500).send({ message: err });
+    //           return;
+    //         }
+
+    //         //res.send({ message: "User was registered successfully!" });
+    //       });
+    //     }
+    //   );
+    // } else {
+    //   Role.findOne({ name: user.roleName }, (err, role) => {
+    //     if (err) {
+    //       res.status(500).send({ message: err });
+    //       return;
+    //     }
+
+    //     user.roles = role._id;
+    //     user.save((err) => {
+    //       if (err) {
+    //         res.status(500).send({ message: err });
+    //         return;
+    //       }
+    //       //gửi mật khẩu và tài khoản về email.
+
+    //       res.send({ message: "Create user successfully!" });
+    //     });
+    //   });
+    // }
   });
 };
 
@@ -143,13 +178,15 @@ exports.findOneUser = (req, res) => {
 };
 
 //Update a user by the id in the request
-exports.updateUser = (req, res) => {
+exports.updateUser = async (req, res) => {
   if (!req.body) {
     return res.status(400).send({
       message: "Data to update can not be empty!",
     });
   }
 
+  const role = await Role.findOne({ name: req.body.role });
+  req.body.role = role?._id;
   const id = req.params.id;
   User.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
     .then((data) => {

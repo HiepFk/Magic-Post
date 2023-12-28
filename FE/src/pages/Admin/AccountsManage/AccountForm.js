@@ -40,7 +40,7 @@ export default function AccountForm({
       const user = await UserService.getUserById(id);
       form.setFieldValue("username", user.username);
       form.setFieldValue("email", user.email);
-      form.setFieldValue("roleName", user.roleName);
+      form.setFieldValue("role", user.role?.name);
     } else {
       form.resetFields();
     }
@@ -97,7 +97,7 @@ export default function AccountForm({
         <Form.Item name="email" label="Email" rules={[{ required: true }]}>
           <Input disabled={!isEdit && id} />
         </Form.Item>
-        <Form.Item name="roleName" label="Chức vụ" rules={[{ required: true }]}>
+        <Form.Item name="role" label="Chức vụ" rules={[{ required: true }]}>
           <Select options={listRole} disabled={!isEdit && id} />
         </Form.Item>
         {!isEdit && !id && (

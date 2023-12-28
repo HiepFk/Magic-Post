@@ -5,6 +5,7 @@ import * as GatheringLocationService from "../../../services/gatherLocation.serv
 import * as TransLocalService from "../../../services/transLocal.service";
 import { notiMessages } from "../../../constants/messages";
 import transLocaltions from "../../../utils/fakeData/TransLocation";
+import UserService from "../../../services/user.service";
 
 export default function TransLocalForm({
   title,
@@ -43,11 +44,11 @@ export default function TransLocalForm({
   };
 
   const getTransManagerOptions = async () => {
-    const res = [...managers];
+    const res = await UserService.getUserByRole("managerTrans");
 
     const opts = res.map((manager) => {
       return {
-        value: manager.username,
+        value: manager._id,
         label: manager.username,
       };
     });
