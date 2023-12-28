@@ -12,13 +12,7 @@ exports.createTransactionLocation = (req, res) => {
   }
 
   //create a transactionLocation
-  const transactionLocation = new TransactionLocation({
-    nameTrans: req.body.nameTrans,
-    phone: req.body.phone,
-    email: req.body.email,
-    managerTransName: req.body.managerTransName,
-    gatherLocationName: req.body.gatherLocationName,
-  });
+  const transactionLocation = new TransactionLocation(req.body);
 
   //Save new transactionLocation
   transactionLocation
@@ -58,7 +52,7 @@ exports.createTransactionLocation = (req, res) => {
 };*/
 
 exports.findOneTrans = (req, res) => {
-  const id = req.params._id;
+  const id = req.params.id;
 
   TransactionLocation.findById(id)
     .then((data) => {
@@ -83,7 +77,7 @@ exports.updateTrans = (req, res) => {
     });
   }
 
-  const id = req.params._id;
+  const id = req.params.id;
   TransactionLocation.findByIdAndUpdate(id, req.body, {
     useFindAndModify: false,
   })
@@ -103,7 +97,7 @@ exports.updateTrans = (req, res) => {
 
 // Delete a transactionLocation with the specified id in the request
 exports.deleteTrans = (req, res) => {
-  const id = req.params._id;
+  const id = req.params.id;
 
   TransactionLocation.findByIdAndRemove(id, { useFindAndModify: false })
     .then((data) => {

@@ -34,7 +34,7 @@ export default function TransLocalForm({
 
     const opts = gatherLocals.map((gatherLocal) => {
       return {
-        value: gatherLocal.nameGather,
+        value: gatherLocal._id,
         label: gatherLocal.nameGather,
       };
     });
@@ -57,14 +57,13 @@ export default function TransLocalForm({
 
   const getInitalValues = async () => {
     if (id) {
-      //   const transLocal = await TransLocalService.getTransLocalById(id);
-      const transLocal = transLocaltions[id - 1];
+      const transLocal = await TransLocalService.getTransLocalById(id);
       form.setFieldValue("nameTrans", transLocal.nameTrans);
       form.setFieldValue("phone", transLocal.phone);
       form.setFieldValue("email", transLocal.email);
       form.setFieldValue("address", transLocal.address);
-      form.setFieldValue("managerNameTrans", transLocal.managerTrans.username);
-      form.setFieldValue("gatherTrans", transLocal.gatherTrans.nameGather);
+      form.setFieldValue("managerTrans", transLocal?.managerTrans?.username);
+      form.setFieldValue("gatherLocation", transLocal?.gatherLocation?._id);
     } else {
       form.resetFields();
     }
@@ -105,7 +104,6 @@ export default function TransLocalForm({
           duration: 1,
         });
       }
-      console.log(111111);
       getData();
       onCancel();
     } catch (error) {
@@ -142,7 +140,7 @@ export default function TransLocalForm({
           <Input disabled={!isEdit && id} />
         </Form.Item>
         <Form.Item
-          name="managerNameTrans"
+          name="managerTrans"
           label="Quản lý"
           rules={[{ required: true }]}
         >
@@ -155,7 +153,7 @@ export default function TransLocalForm({
           />
         </Form.Item>
         <Form.Item
-          name="gatherTrans"
+          name="gatherLocation"
           label="Điểm tập kết"
           rules={[{ required: true }]}
         >

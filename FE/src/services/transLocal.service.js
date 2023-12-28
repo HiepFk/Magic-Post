@@ -7,7 +7,7 @@ function createTransLocal(data) {
 }
 
 function updateTransLocal(id, data) {
-  return instance.put(`${url}/${id}`, data);
+  return instance.patch(`${url}/${id}`, data);
 }
 
 function getTransLocals(keyword) {

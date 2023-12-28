@@ -78,8 +78,7 @@ const TransLocalManage = () => {
         title: "Thuộc điểm tập kết",
         dataIndex: "gatherLocation",
         render: (_, record) => {
-          // return record?.nameGather;
-          return record?.nameTrans;
+          return record?.gatherLocation?.nameGather;
         },
       },
       {
