@@ -9,21 +9,44 @@ import { notiMessages } from "../../../constants/messages";
 const AdminDashboard = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [showForm, setShowForm] = useState(false);
-  const [editingId, setEditingId] = useState(0);
+  const [id, setId] = useState(0);
+  const [isEdit, setIsEdit] = useState(false);
   const [data, setData] = useState([]);
+
+  const handleAdd = () => {
+    setShowForm(true);
+    setIsEdit(false);
+    setId(null);
+  };
+
+  const handleEdit = (id) => {
+    setShowForm(true);
+    setIsEdit(true);
+    setId(id);
+  };
+  const handleView = (id) => {
+    setShowForm(true);
+    setIsEdit(false);
+    setId(id);
+  };
+
   const handleCloseForm = useCallback(() => {
     setShowForm(false);
-    setEditingId(0);
+    setIsEdit(false);
+    setId(0);
   }, []);
 
   useEffect(() => {
     getData();
-  }, [handleCloseForm]);
+  }, []);
 
   const getData = async (keyword) => {
-    const res = await GatherLocationService.getGatherLocations(keyword);
-
-    setData(res);
+    try {
+      const res = await GatherLocationService.getGatherLocations(keyword);
+      setData(res);
+    } catch (error) {
+      setData([]);
+    }
   };
 
   const columns = useMemo(() => {
@@ -50,7 +73,10 @@ const AdminDashboard = () => {
         render: (_, record) => {
           return (
             <Space>
-              <Button icon={<EyeFilled />} />
+              <Button
+                onClick={() => handleView(record._id)}
+                icon={<EyeFilled />}
+              />
               <Button
                 onClick={() => handleEdit(record._id)}
                 icon={<EditOutlined />}
@@ -68,10 +94,12 @@ const AdminDashboard = () => {
       },
     ];
   }, [data]);
+
   const onSelectChange = (newSelectedRowKeys) => {
     console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
+
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
@@ -79,10 +107,6 @@ const AdminDashboard = () => {
 
   const handleSearch = async ({ keyword }) => {
     await getData(keyword);
-  };
-
-  const handleAdd = () => {
-    setShowForm(true);
   };
 
   const handleDelete = async (id) => {
@@ -101,10 +125,6 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleEdit = (id) => {
-    setShowForm(true);
-    setEditingId(id);
-  };
   return (
     <>
       <PageHeader title={"Điểm tập kết"} />
@@ -118,8 +138,13 @@ const AdminDashboard = () => {
       <GatheringLocationForm
         open={showForm}
         onCancel={handleCloseForm}
-        title={(editingId ? "Chỉnh sửa" : "Thêm") + " điểm tập kết"}
-        id={editingId}
+        title={
+          (isEdit && id ? "Chỉnh sửa" : id ? "Xem" : "Thêm") + " tài khoản"
+        }
+        id={id}
+        isEdit={isEdit}
+        setIsEdit={setIsEdit}
+        getData={getData}
       />
     </>
   );

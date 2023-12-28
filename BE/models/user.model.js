@@ -11,7 +11,7 @@ const User = mongoose.model(
     nameTrans: String,
     nameGather: String,
     roleName: String,
-    roles: {
+    role: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Role",
     },

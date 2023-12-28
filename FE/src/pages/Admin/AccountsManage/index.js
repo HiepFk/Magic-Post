@@ -40,7 +40,7 @@ const AccountsManage = () => {
 
   useEffect(() => {
     getData();
-  }, [handleCloseForm]);
+  }, []);
 
   const getData = async (keyword) => {
     try {
@@ -66,7 +66,7 @@ const AccountsManage = () => {
         title: "Chức vụ",
         dataIndex: "role",
         render: (_, record) => {
-          return RoleName[record.roles];
+          return RoleName[record.roleName];
         },
       },
       {
@@ -147,6 +147,7 @@ const AccountsManage = () => {
         id={id}
         isEdit={isEdit}
         setIsEdit={setIsEdit}
+        getData={getData}
       />
     </>
   );

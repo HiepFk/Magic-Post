@@ -6,7 +6,15 @@ import * as TransLocalService from "../../../services/transLocal.service";
 import { notiMessages } from "../../../constants/messages";
 import transLocaltions from "../../../utils/fakeData/TransLocation";
 
-export default function TransLocalForm({ title, open, onCancel, id }) {
+export default function TransLocalForm({
+  title,
+  open,
+  onCancel,
+  id,
+  isEdit,
+  setIsEdit,
+  getData,
+}) {
   const [managerOptions, setManagerOptions] = useState([]);
   const [gatherOptions, setGatherOptions] = useState([]);
   const [form] = Form.useForm();
@@ -21,7 +29,7 @@ export default function TransLocalForm({ title, open, onCancel, id }) {
 
   const getTransGatherLocalOptions = async (keyword) => {
     const gatherLocals = await GatheringLocationService.getGatherLocations(
-      keyword,
+      keyword
     );
 
     const opts = gatherLocals.map((gatherLocal) => {
@@ -73,6 +81,10 @@ export default function TransLocalForm({ title, open, onCancel, id }) {
   };
 
   const handleSubmit = () => {
+    if (!isEdit && id) {
+      setIsEdit(true);
+      return;
+    }
     form.submit();
   };
 
@@ -93,6 +105,8 @@ export default function TransLocalForm({ title, open, onCancel, id }) {
           duration: 1,
         });
       }
+      console.log(111111);
+      getData();
       onCancel();
     } catch (error) {
       notification.error({
@@ -102,10 +116,16 @@ export default function TransLocalForm({ title, open, onCancel, id }) {
     }
   };
   return (
-    <Modal open={open} title={title} onCancel={onCancel} onOk={handleSubmit}>
+    <Modal
+      open={open}
+      title={title}
+      onCancel={onCancel}
+      onOk={handleSubmit}
+      okText={id && !isEdit ? "Edit" : "Save"}
+    >
       <Form form={form} layout="vertical" onFinish={handleFinish}>
         <Form.Item name="nameTrans" label="Tên" rules={[{ required: true }]}>
-          <Input />
+          <Input disabled={!isEdit && id} />
         </Form.Item>
         <Form.Item
           name="phone"
@@ -113,13 +133,13 @@ export default function TransLocalForm({ title, open, onCancel, id }) {
           label="Số điện thoại"
           rules={[{ required: true }]}
         >
-          <Input />
+          <Input disabled={!isEdit && id} />
         </Form.Item>
         <Form.Item name="email" label="Email" rules={[{ required: true }]}>
-          <Input />
+          <Input disabled={!isEdit && id} />
         </Form.Item>
         <Form.Item name="address" label="Địa chỉ" rules={[{ required: true }]}>
-          <Input />
+          <Input disabled={!isEdit && id} />
         </Form.Item>
         <Form.Item
           name="managerNameTrans"
@@ -131,6 +151,7 @@ export default function TransLocalForm({ title, open, onCancel, id }) {
             onChange={handleChangeManager}
             onSearch={handleSearchManager}
             options={managerOptions}
+            disabled={!isEdit && id}
           />
         </Form.Item>
         <Form.Item
@@ -143,6 +164,7 @@ export default function TransLocalForm({ title, open, onCancel, id }) {
             onChange={handleChangeGather}
             onSearch={handleSearchGather}
             options={gatherOptions}
+            disabled={!isEdit && id}
           />
         </Form.Item>
       </Form>

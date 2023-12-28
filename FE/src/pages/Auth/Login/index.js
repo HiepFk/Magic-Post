@@ -20,9 +20,11 @@ const Login = () => {
   const navigate = useNavigate();
   const { user, setUser } = useContext(AuthContext);
 
+  console.log(user);
+
   useEffect(() => {
     if (user) {
-      switch (user.role.name) {
+      switch (user.roleName) {
         case Role.owner:
           navigate("/admin/diem-giao-dich");
           break;

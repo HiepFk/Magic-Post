@@ -3,8 +3,10 @@ import instance from "../config/axios";
 
 const API_URL = "http://localhost:3000/api/auth/";
 
+const url = "/v1/auth";
+
 const register = (username, email, password) => {
-  return axios.post(API_URL + "signup", {
+  return axios.post(url + "signup", {
     username,
     email,
     password,
@@ -12,11 +14,11 @@ const register = (username, email, password) => {
 };
 
 const login = (data) => {
-  return instance.post("/auth/signin", data);
+  return instance.post(`${url}/signin`, data);
 };
 
 const logout = () => {
-  return instance.post("/auth/signout");
+  return instance.post(`${url}/signout`);
 };
 
 const getCurrentUser = () => {

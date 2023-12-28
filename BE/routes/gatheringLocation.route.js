@@ -1,21 +1,36 @@
 const { authJWT } = require("../middlewares");
 const controlGather = require("../controllers/gatheringLocation.controller");
+const router = require("express").Router();
 
-module.exports = function (app) {
-  app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Header", "Origin, Content-Type, Accept");
-    next();
-  });
+router
+  .route("/")
+  .get(controlGather.showAllGatherLoca)
+  .delete(controlGather.deleteAllGather);
 
-  app.post("/api/gatherLoca/createGather", controlGather.createGather);
+router.route("/").post(controlGather.createGather);
+router
+  .route("/:id")
+  .get(controlGather.findOneGather)
+  .patch(controlGather.updateGather)
+  .delete(controlGather.deleteGather);
 
-  app.get("/api/gatherLoca/showAlGather", controlGather.showAllGatherLoca);
+module.exports = router;
 
-  app.get("/api/gatherLoca/findOne/:_id", controlGather.findOneGather);
+// module.exports = function (app) {
+//   app.use(function (req, res, next) {
+//     res.header("Access-Control-Allow-Header", "Origin, Content-Type, Accept");
+//     next();
+//   });
 
-  app.delete("/api/gatherLoca/deleteAll", controlGather.deleteAllGather);
+//   app.post("/api/gatherLoca/createGather", controlGather.createGather);
 
-  app.delete("/api/gatherLoca/deleteOne/:_id", controlGather.deleteGather);
+//   app.get("/api/gatherLoca/showAlGather", controlGather.showAllGatherLoca);
 
-  app.put("/api/gatherLoca/update/:_id", controlGather.updateGather);
-};
+//   app.get("/api/gatherLoca/findOne/:_id", controlGather.findOneGather);
+
+//   app.delete("/api/gatherLoca/deleteAll", controlGather.deleteAllGather);
+
+//   app.delete("/api/gatherLoca/deleteOne/:_id", controlGather.deleteGather);
+
+//   app.put("/api/gatherLoca/update/:_id", controlGather.updateGather);
+// };

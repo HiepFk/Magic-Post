@@ -11,6 +11,7 @@ export default function AccountForm({
   id,
   isEdit,
   setIsEdit,
+  getData,
 }) {
   const [form] = Form.useForm();
 
@@ -39,14 +40,14 @@ export default function AccountForm({
       const user = await UserService.getUserById(id);
       form.setFieldValue("username", user.username);
       form.setFieldValue("email", user.email);
-      form.setFieldValue("role", user.roleName);
+      form.setFieldValue("roleName", user.roleName);
     } else {
       form.resetFields();
     }
   };
 
   const handleSubmit = () => {
-    if (!isEdit) {
+    if (!isEdit && id) {
       setIsEdit(true);
       return;
     }
@@ -68,6 +69,7 @@ export default function AccountForm({
           duration: 1,
         });
       }
+      getData();
       onCancel();
     } catch (error) {
       notification.error({
@@ -90,14 +92,25 @@ export default function AccountForm({
           label="Tên người dùng"
           rules={[{ required: true }]}
         >
-          <Input disabled={!isEdit} />
+          <Input disabled={!isEdit && id} />
         </Form.Item>
         <Form.Item name="email" label="Email" rules={[{ required: true }]}>
-          <Input disabled={!isEdit} />
+          <Input disabled={!isEdit && id} />
         </Form.Item>
-        <Form.Item name="role" label="Chức vụ" rules={[{ required: true }]}>
-          <Select options={listRole} disabled={!isEdit} />
+        <Form.Item name="roleName" label="Chức vụ" rules={[{ required: true }]}>
+          <Select options={listRole} disabled={!isEdit && id} />
         </Form.Item>
+        {!isEdit && !id && (
+          <>
+            <Form.Item
+              name="password"
+              label="Mật khẩu"
+              rules={[{ required: true }]}
+            >
+              <Input.Password />
+            </Form.Item>
+          </>
+        )}
       </Form>
     </Modal>
   );

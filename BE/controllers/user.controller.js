@@ -36,30 +36,26 @@ exports.adminBoard = (req, res) => {
 };
 
 exports.showAllUser = (req, res) => {
-  if(req.query.keyword){
-    User.find({ username : req.query.keyword})
+  if (req.query.keyword) {
+    User.find({ username: req.query.keyword })
       .then((users) => {
         return res.json(users);
       })
       .catch((err) => res.json(err));
   }
   User.find()
-  .then((users) => {
-    return res.json(users);
-  })
-  .catch((err) => res.json(err));
+    .then((users) => {
+      return res.json(users);
+    })
+    .catch((err) => res.json(err));
 };
 
 // Create admin
 exports.createUser = (req, res) => {
   //Valid request
   const user = new User({
-    username: req.body.username,
-    email: req.body.email,
+    ...req.body,
     password: bcrypt.hashSync(req.body.password, 8),
-    roleName: req.body.roleName,
-    nameTrans: req.body.nameTrans,
-    nameGather: req.body.nameGather,
   });
 
   user.save((err, user) => {
@@ -133,7 +129,7 @@ exports.createUser = (req, res) => {
 };*/
 
 exports.findOneUser = (req, res) => {
-  const id = req.params._id;
+  const id = req.params.id;
 
   User.findById(id)
     .then((data) => {
@@ -154,7 +150,7 @@ exports.updateUser = (req, res) => {
     });
   }
 
-  const id = req.params._id;
+  const id = req.params.id;
   User.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
     .then((data) => {
       if (!data)
@@ -168,7 +164,7 @@ exports.updateUser = (req, res) => {
 
 // Delete a user with the specified id in the request
 exports.deleteUser = (req, res) => {
-  const id = req.params._id;
+  const id = req.params.id;
 
   User.findByIdAndRemove(id, { useFindAndModify: false })
     .then((data) => {

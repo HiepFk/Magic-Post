@@ -1,87 +1,99 @@
 const { authJWT } = require("../middlewares");
 const controlUser = require("../controllers/user.controller");
+const router = require("express").Router();
 
-module.exports = function (app) {
-  app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept");
-    next();
-  });
+router.route("/").get(controlUser.showAllUser).delete(controlUser.deleteAll);
 
-  app.get("/api/test/all/", controlUser.allAccess);
+router.route("/").post(controlUser.createUser);
+router
+  .route("/:id")
+  .get(controlUser.findOneUser)
+  .patch(controlUser.updateUser)
+  .delete(controlUser.deleteUser);
 
-  app.get("/api/test/user/", [authJWT.verifyToken], controlUser.userBoard);
+module.exports = router;
 
-  app.get(
-    "/api/test/staffGather/",
-    [authJWT.verifyToken, authJWT.isStaffGather],
-    controlUser.staffGatherBoard
-  );
+// module.exports = function (app) {
+//   app.use(function (req, res, next) {
+//     res.header("Access-Control-Allow-Headers", "Origin, Content-Type, Accept");
+//     next();
+//   });
 
-  app.get(
-    "/api/test/managerGather/",
-    [authJWT.verifyToken, authJWT.isManagerGather],
-    controlUser.managerGatherBoard
-  );
+//   app.get("/api/test/all/", controlUser.allAccess);
 
-  app.get(
-    "/api/test/staffTrans/",
-    [authJWT.verifyToken, authJWT.isStaffTrans],
-    controlUser.staffTransBoard
-  );
+//   app.get("/api/test/user/", [authJWT.verifyToken], controlUser.userBoard);
 
-  app.get(
-    "/api/test/managerTrans/",
-    [authJWT.verifyToken, authJWT.isManagerTrans],
-    controlUser.managerTransBoard
-  );
+//   app.get(
+//     "/api/test/staffGather/",
+//     [authJWT.verifyToken, authJWT.isStaffGather],
+//     controlUser.staffGatherBoard
+//   );
 
-  app.get(
-    "/api/test/admin/",
-    [authJWT.verifyToken, authJWT.isAdmin],
-    controlUser.adminBoard
-  );
+//   app.get(
+//     "/api/test/managerGather/",
+//     [authJWT.verifyToken, authJWT.isManagerGather],
+//     controlUser.managerGatherBoard
+//   );
 
-  app.get(
-    "/api/admin/showAllUsers/",
-    [authJWT.verifyToken, authJWT.isAdmin],
-    controlUser.showAllUser
-  );
+//   app.get(
+//     "/api/test/staffTrans/",
+//     [authJWT.verifyToken, authJWT.isStaffTrans],
+//     controlUser.staffTransBoard
+//   );
 
-  app.get(
-    "/api/staffTrans/:name",
-    [authJWT.verifyToken, authJWT.isManagerTrans],
-    controlUser.findAllStaffTrans
-  );
+//   app.get(
+//     "/api/test/managerTrans/",
+//     [authJWT.verifyToken, authJWT.isManagerTrans],
+//     controlUser.managerTransBoard
+//   );
 
-  app.get(
-    "/api/staffGather/:name",
-    [authJWT.verifyToken, authJWT.isManagerGather],
-    controlUser.findAllStaffGather
-  );
+//   app.get(
+//     "/api/test/admin/",
+//     [authJWT.verifyToken, authJWT.isAdmin],
+//     controlUser.adminBoard
+//   );
 
-  app.post("/api/createUser", [authJWT.verifyToken], controlUser.createUser);
+//   app.get(
+//     "/api/admin/showAllUsers/",
+//     [authJWT.verifyToken, authJWT.isAdmin],
+//     controlUser.showAllUser
+//   );
 
-  app.delete(
-    "/api/deleteUser/:_id",
-    [authJWT.verifyToken],
-    controlUser.deleteUser
-  );
+//   app.get(
+//     "/api/staffTrans/:name",
+//     [authJWT.verifyToken, authJWT.isManagerTrans],
+//     controlUser.findAllStaffTrans
+//   );
 
-  app.delete(
-    "/api/deleteAllUser/",
-    [authJWT.verifyToken],
-    controlUser.deleteAll
-  );
+//   app.get(
+//     "/api/staffGather/:name",
+//     [authJWT.verifyToken, authJWT.isManagerGather],
+//     controlUser.findAllStaffGather
+//   );
 
-  app.put(
-    "/api/updateUser/:_id",
-    [authJWT.verifyToken],
-    controlUser.updateUser
-  );
+//   app.post("/api/createUser", [authJWT.verifyToken], controlUser.createUser);
 
-  app.get(
-    "/api/searchUser/:_id",
-    [authJWT.verifyToken],
-    controlUser.findOneUser
-  );
-};
+//   app.delete(
+//     "/api/deleteUser/:_id",
+//     [authJWT.verifyToken],
+//     controlUser.deleteUser
+//   );
+
+//   app.delete(
+//     "/api/deleteAllUser/",
+//     [authJWT.verifyToken],
+//     controlUser.deleteAll
+//   );
+
+//   app.put(
+//     "/api/updateUser/:_id",
+//     [authJWT.verifyToken],
+//     controlUser.updateUser
+//   );
+
+//   app.get(
+//     "/api/searchUser/:_id",
+//     [authJWT.verifyToken],
+//     controlUser.findOneUser
+//   );
+// };

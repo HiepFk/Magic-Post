@@ -1,9 +1,16 @@
 const express = require("express");
 const cors = require("cors");
+const morgan = require("morgan");
 const cookieSession = require("cookie-session");
 
 const dbConfig = require("./config/db.config");
 //const cookieSession = require("cookie-session");
+
+const userRoute = require("./routes/user.route");
+const authRoute = require("./routes/auth.route");
+const orderRoute = require("./routes/order.route");
+const gatheringLocationRoute = require("./routes/gatheringLocation.route");
+const transactionLocationRoute = require("./routes/transactionLocation.route");
 
 const app = express();
 
@@ -13,15 +20,15 @@ var corsOptions = {
 
 app.use(cors(corsOptions));
 
-// parse requests of content-type - application/json
 app.use(express.json());
 
-// parse requests of content-type - application/x-www-form-urlencoded
+app.use(morgan("common"));
+
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cookieSession({
     name: "be-session",
-    keys: ["COOKIE_SECRET"], // should use as secret environment variable
+    keys: ["COOKIE_SECRET"],
     httpOnly: true,
   })
 );
@@ -31,7 +38,7 @@ const Role = db.role;
 //db.sequelize.sync();
 
 db.mongoose
-  .connect(`mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.DB}`, {
+  .connect(`${dbConfig.DATABASE}`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
@@ -47,11 +54,11 @@ db.mongoose
 // simple route
 
 // routes
-require("./routes/auth.route")(app);
-require("./routes/user.route")(app);
-require("./routes/gatheringLocation.route")(app);
-require("./routes/transactionLocation.route")(app);
-require("./routes/order.route")(app);
+app.use("/api/v1/user", userRoute);
+app.use("/api/v1/auth", authRoute);
+app.use("/api/v1/order", orderRoute);
+app.use("/api/v1/gatheringLocation", gatheringLocationRoute);
+app.use("/api/v1/transactionLocation", transactionLocationRoute);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

@@ -65,9 +65,10 @@ exports.signin = (req, res) => {
   User.findOne({
     username: req.body.username,
   })
-    .populate("roles", "-__v")
+    .populate("role", "-__v")
     .exec((err, user) => {
       if (err) {
+        console.log(err);
         res.status(500).send({ message: err });
         return;
       }
@@ -101,12 +102,14 @@ exports.signin = (req, res) => {
 
       //req.session.token = token;
 
+      console.log(user);
+
       res.status(200).send({
         id: user._id,
         username: user.username,
         email: user.email,
         accessToken: token,
-        role: user.roles,
+        roleName: user.roleName,
         message: "Signin successfully!",
       });
     });

@@ -10,21 +10,47 @@ import transLocaltions from "../../../utils/fakeData/TransLocation";
 const TransLocalManage = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [showForm, setShowForm] = useState(false);
-  const [editingId, setEditingId] = useState(0);
+  const [id, setId] = useState(0);
+  const [isEdit, setIsEdit] = useState(false);
   const [data, setData] = useState([]);
+
+  const handleAdd = () => {
+    setShowForm(true);
+    setIsEdit(false);
+    setId(null);
+  };
+
+  const handleEdit = (id) => {
+    setShowForm(true);
+    setIsEdit(true);
+    setId(id);
+  };
+  const handleView = (id) => {
+    setShowForm(true);
+    setIsEdit(false);
+    setId(id);
+  };
+
   const handleCloseForm = useCallback(() => {
     setShowForm(false);
-    setEditingId(0);
+    setIsEdit(false);
+    setId(0);
   }, []);
 
   useEffect(() => {
     getData();
-  }, [handleCloseForm]);
+  }, []);
 
   const getData = async (keyword) => {
-    // const res = await TransLocalService.getTransLocals(keyword);
-    const res = transLocaltions;
-    setData(res);
+    console.log(22222);
+
+    try {
+      const res = await TransLocalService.getTransLocals(keyword);
+      setData(res);
+    } catch (error) {
+      const res = transLocaltions;
+      setData(res);
+    }
   };
 
   const columns = useMemo(() => {
@@ -45,14 +71,15 @@ const TransLocalManage = () => {
         title: "Tên người quản lý",
         dataIndex: "managerTrans",
         render: (_, record) => {
-          return record.managerTrans.username;
+          return record?.managerTrans?.username;
         },
       },
       {
         title: "Thuộc điểm tập kết",
         dataIndex: "gatherLocation",
         render: (_, record) => {
-          return record.gatherTrans.nameGather;
+          // return record?.nameGather;
+          return record?.nameTrans;
         },
       },
       {
@@ -61,7 +88,10 @@ const TransLocalManage = () => {
         render: (_, record) => {
           return (
             <Space>
-              <Button icon={<EyeFilled />} />
+              <Button
+                icon={<EyeFilled />}
+                onClick={() => handleView(record._id)}
+              />
               <Button
                 onClick={() => handleEdit(record._id)}
                 icon={<EditOutlined />}
@@ -79,10 +109,12 @@ const TransLocalManage = () => {
       },
     ];
   }, [data]);
+
   const onSelectChange = (newSelectedRowKeys) => {
     console.log("selectedRowKeys changed: ", newSelectedRowKeys);
     setSelectedRowKeys(newSelectedRowKeys);
   };
+
   const rowSelection = {
     selectedRowKeys,
     onChange: onSelectChange,
@@ -92,13 +124,9 @@ const TransLocalManage = () => {
     await getData(keyword);
   };
 
-  const handleAdd = () => {
-    setShowForm(true);
-  };
-
   const handleDelete = async (id) => {
     try {
-      await TransLocalService.getTransLocalById(id);
+      await TransLocalService.deleteTransLocalById(id);
       getData();
       notification.success({
         message: notiMessages.deleteSuccessfully,
@@ -112,10 +140,6 @@ const TransLocalManage = () => {
     }
   };
 
-  const handleEdit = (id) => {
-    setShowForm(true);
-    setEditingId(id);
-  };
   return (
     <>
       <PageHeader title={"Điểm giao dịch"} />
@@ -129,8 +153,13 @@ const TransLocalManage = () => {
       <TransLocalForm
         open={showForm}
         onCancel={handleCloseForm}
-        title={(editingId ? "Chỉnh sửa" : "Thêm") + " điểm giao dịch"}
-        id={editingId}
+        title={
+          (isEdit && id ? "Chỉnh sửa" : id ? "Xem" : "Thêm") + " tài khoản"
+        }
+        id={id}
+        isEdit={isEdit}
+        setIsEdit={setIsEdit}
+        getData={getData}
       />
     </>
   );

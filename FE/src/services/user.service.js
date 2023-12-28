@@ -3,6 +3,8 @@ import instance from "../config/axios";
 
 const API_URL = "http://localhost:3000/api/test/";
 
+const url = "/v1/user";
+
 const getPublicContent = () => {
   return axios.get(API_URL + "all");
 };
@@ -20,15 +22,15 @@ const getAdminBoard = () => {
 };
 
 const createUser = (data) => {
-  return instance.post("/user/createUser", data);
+  return instance.post(url, data);
 };
 
-const updateUser = (data) => {
-  return instance.put("", data);
+const updateUser = (id, data) => {
+  return instance.patch(`${url}/${id}`, data);
 };
 
 const getUsers = (keyword) => {
-  return instance.get("/admin/showAllUsers", {
+  return instance.get(url, {
     params: {
       keyword,
     },
@@ -36,11 +38,11 @@ const getUsers = (keyword) => {
 };
 
 const getUserById = (id) => {
-  return instance.get(`/searchUser/${id}`);
+  return instance.get(`${url}/${id}`);
 };
 
 const deleteUserById = (id) => {
-  return instance.delete(`/deleteUser/${id}`);
+  return instance.delete(`${url}/${id}`);
 };
 
 const UserService = {

@@ -5,7 +5,15 @@ import gatheringLocations from "../../../utils/fakeData/GatheringLocation";
 import * as GatheringLocationService from "../../../services/gatherLocation.service";
 import { notiMessages } from "../../../constants/messages";
 
-export default function GatheringLocationForm({ title, open, onCancel, id }) {
+export default function GatheringLocationForm({
+  title,
+  open,
+  onCancel,
+  id,
+  isEdit,
+  setIsEdit,
+  getData,
+}) {
   const [options, setOptions] = useState([]);
   const [form] = Form.useForm();
   useEffect(() => {
@@ -37,10 +45,10 @@ export default function GatheringLocationForm({ title, open, onCancel, id }) {
       form.setFieldValue("phone", gatheringLocation.phone);
       form.setFieldValue("email", gatheringLocation.email);
       form.setFieldValue("address", gatheringLocation.address);
-      form.setFieldValue(
-        "managerNameGather",
-        gatheringLocation.managerGather.username,
-      );
+      // form.setFieldValue(
+      //   "managerNameGather",
+      //   gatheringLocation.managerGather.username
+      // );
     } else {
       form.resetFields();
     }
@@ -51,6 +59,10 @@ export default function GatheringLocationForm({ title, open, onCancel, id }) {
   const handleSearchManager = (value) => {};
 
   const handleSubmit = () => {
+    if (!isEdit && id) {
+      setIsEdit(true);
+      return;
+    }
     form.submit();
   };
 
@@ -66,7 +78,7 @@ export default function GatheringLocationForm({ title, open, onCancel, id }) {
       } else {
         const res = await GatheringLocationService.updateGatherLocation(
           id,
-          values,
+          values
         );
 
         notification.success({
@@ -74,6 +86,7 @@ export default function GatheringLocationForm({ title, open, onCancel, id }) {
           duration: 1,
         });
       }
+      getData();
       onCancel();
     } catch (error) {
       notification.error({
@@ -83,10 +96,16 @@ export default function GatheringLocationForm({ title, open, onCancel, id }) {
     }
   };
   return (
-    <Modal open={open} title={title} onCancel={onCancel} onOk={handleSubmit}>
+    <Modal
+      open={open}
+      title={title}
+      onCancel={onCancel}
+      onOk={handleSubmit}
+      okText={id && !isEdit ? "Edit" : "Save"}
+    >
       <Form form={form} layout="vertical" onFinish={handleFinish}>
         <Form.Item name="nameGather" label="Tên" rules={[{ required: true }]}>
-          <Input />
+          <Input disabled={!isEdit && id} />
         </Form.Item>
         <Form.Item
           name="phone"
@@ -94,13 +113,13 @@ export default function GatheringLocationForm({ title, open, onCancel, id }) {
           label="Số điện thoại"
           rules={[{ required: true }]}
         >
-          <Input />
+          <Input disabled={!isEdit && id} />
         </Form.Item>
         <Form.Item name="email" label="Email" rules={[{ required: true }]}>
-          <Input />
+          <Input disabled={!isEdit && id} />
         </Form.Item>
         <Form.Item name="address" label="Địa chỉ" rules={[{ required: true }]}>
-          <Input />
+          <Input disabled={!isEdit && id} />
         </Form.Item>
         <Form.Item
           name="managerNameGather"
@@ -112,6 +131,7 @@ export default function GatheringLocationForm({ title, open, onCancel, id }) {
             onChange={handleChangeManager}
             onSearch={handleSearchManager}
             options={options}
+            disabled={!isEdit && id}
           />
         </Form.Item>
       </Form>

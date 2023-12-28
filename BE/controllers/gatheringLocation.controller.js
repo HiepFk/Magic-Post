@@ -13,12 +13,7 @@ exports.createGather = (req, res) => {
   }
 
   //create a gatheringLocation
-  const gatheringLocation = new GatheringLocation({
-    nameGather: req.body.nameGather,
-    phone: req.body.phone,
-    email: req.body.email,
-    managerNameGather: req.body.managerNameGather,
-  });
+  const gatheringLocation = new GatheringLocation(req.body);
 
   //Save new gatheringLocation
   gatheringLocation
@@ -56,7 +51,7 @@ exports.createGather = (req, res) => {
 };*/
 
 exports.findOneGather = (req, res) => {
-  const id = req.params._id;
+  const id = req.params.id;
 
   GatheringLocation.findById(id)
     .then((data) => {
@@ -77,8 +72,8 @@ exports.updateGather = (req, res) => {
     });
   }
 
-  const id = req.params._id;
-  GatheringLocation.findByIdAndUpdate(id, { useFindAndModify: false })
+  const id = req.params.id;
+  GatheringLocation.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
     .then((data) => {
       if (!data)
         res.status(404).send({ message: "Not found gathering with id" + id });
@@ -93,7 +88,7 @@ exports.updateGather = (req, res) => {
 
 // Delete a gathering with the specified id in the request
 exports.deleteGather = (req, res) => {
-  const id = req.params._id;
+  const id = req.params.id;
   GatheringLocation.findByIdAndRemove(id, { useFindAndModify: false })
     .then((data) => {
       if (!data) {

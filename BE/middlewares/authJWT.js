@@ -43,7 +43,6 @@ isAdmin = (req, res, next) => {
           res.status(500).send({ message: err });
           return;
         }
-        console.log(roles);
         if (roles[0].name === "admin") {
           next();
           return;
@@ -130,7 +129,7 @@ isManagerGather = (req, res, next) => {
           return;
         }
 
-        if (roles.name === "managerGather") {
+        if (roles[0].name === "managerGather") {
           next();
           return;
         }
@@ -200,6 +199,33 @@ isStaffGather = (req, res, next) => {
   });
 };
 
+restrictTo = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.roleName)) {
+      res.status(403).json({
+        status: "error",
+        message: "You do not have permission to perform this action",
+      });
+      return;
+    }
+    next();
+  };
+};
+
+isAuthenticatedUser = async (req, res, next) => {
+  let token = req.headers["x-access-token"];
+  if (!token) {
+    return res.status(403).send({ message: "No token provided!" });
+  }
+  const decoded = jwt.verify(token, config.secret);
+  const currentUser = await User.findById(decoded.id);
+  if (!currentUser) {
+    return res.status(401).send({ message: "Unauthorized" });
+  }
+  req.user = currentUser;
+  next();
+};
+
 const authJWT = {
   verifyToken,
   isAdmin,
@@ -208,6 +234,8 @@ const authJWT = {
   isManagerGather,
   isStaffGather,
   isUser,
+  restrictTo,
+  isAuthenticatedUser,
 };
 
 module.exports = authJWT;

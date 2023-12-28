@@ -1,44 +1,53 @@
 const { authJWT } = require("../middlewares");
 const { verifySignUp } = require("../middlewares");
-//const authJWT = require("../middlewares/authJWT");
 const controlAuth = require("../controllers/auth.controller");
 const controlUser = require("../controllers/user.controller");
 const controlEmail = require("../services/email.service");
+const router = require("express").Router();
 
-module.exports = function (app) {
-  app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Header", "Origin, Content-Type, Accept");
-    next();
-  });
+router.route("/signin").post(controlAuth.signin);
+router.route("/signout").post(controlAuth.signout);
+router.route("/sendAccount").post(controlEmail.createEmail);
 
-  //signup
-  app.post(
-    "/api/auth/signup",
-    [
-      verifySignUp.checkDuplicateUsernameOrEmail,
-      verifySignUp.checkRolesExisted,
-    ],
-    controlAuth.signup
-  );
+router.route("/userBoard").get(controlAuth.isUser);
+router.route("/adminBoard").get(controlAuth.isAdmin);
 
-  //signin
-  app.post("/api/auth/signin", controlAuth.signin);
+module.exports = router;
 
-  //sign out
-  app.post("/api/auth/signout", controlAuth.signout);
+// module.exports = function (app) {
+//   app.use(function (req, res, next) {
+//     res.header("Access-Control-Allow-Header", "Origin, Content-Type, Accept");
+//     next();
+//   });
 
-  app.post("/api/auth/sendAccount", controlEmail.createEmail);
+//   //signup
+//   app.post(
+//     "/api/auth/signup",
+//     [
+//       verifySignUp.checkDuplicateUsernameOrEmail,
+//       verifySignUp.checkRolesExisted,
+//     ],
+//     controlAuth.signup
+//   );
 
-  app.post("/api/user/createUser", controlUser.createUser);
+//   //signin
+//   app.post("/api/auth/signin", controlAuth.signin);
 
-  app.get(
-    "/api/auth/userBoard",
-    // [authJWT.isUser, authJWT.verifyToken],
-    controlAuth.isUser
-  );
-  app.get(
-    "/api/auth/adminBoard",
-    // [authJWT.isAdmin, authJWT.verifyToken],
-    controlAuth.isAdmin
-  );
-};
+//   //sign out
+//   app.post("/api/auth/signout", controlAuth.signout);
+
+//   app.post("/api/auth/sendAccount", controlEmail.createEmail);
+
+//   app.post("/api/user/createUser", controlUser.createUser);
+
+//   app.get(
+//     "/api/auth/userBoard",
+//     // [authJWT.isUser, authJWT.verifyToken],
+//     controlAuth.isUser
+//   );
+//   app.get(
+//     "/api/auth/adminBoard",
+//     // [authJWT.isAdmin, authJWT.verifyToken],
+//     controlAuth.isAdmin
+//   );
+// };
