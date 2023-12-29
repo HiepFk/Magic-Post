@@ -12,7 +12,7 @@ const Role = {
   staffGather: "staffGather",
   managerTrans: "managerTrans",
   staffTrans: "staffTrans",
-  user: "user",
+  user: "user"
 };
 
 const RoleName = {
@@ -89,13 +89,13 @@ const StaffGatherMenuItems = [
 
 const UserMenuItems = [
   {
-    key: "don-dang-giao",
-    label: "Đơn đang giao",
+    key: "nav-1",
+    label: "Nav 1",
   },
   {
     key: "don-da-nhan",
     label: "Đơn đã nhận",
-  },
+  }
 ];
 
 const OrderFromThisStepsItems = [

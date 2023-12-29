@@ -51,6 +51,15 @@ const App = () => {
         </Route>
       </Route>
       <Route
+        path="user"
+        element={<DefaultLayout menuItems={UserMenuItems} />}
+      >
+        <Route path="" element={<Middleware role={Role.user} />}>
+          <Route path="don-dang-giao" element={<OrderTimeLine />} />
+          <Route path="diem-da-nhan" element={<OrderHistory />} />
+        </Route>
+      </Route>
+      <Route
         path="admin"
         element={<DefaultLayout menuItems={AdminMenuItems} />}
       >
