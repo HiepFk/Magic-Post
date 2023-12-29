@@ -10,11 +10,31 @@ import TellerForm from "./TellerForm";
 const TellersManage = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [showForm, setShowForm] = useState(false);
-  const [editingId, setEditingId] = useState(0);
+  const [id, setId] = useState(0);
+  const [isEdit, setIsEdit] = useState(false);
   const [data, setData] = useState([]);
+
+  const handleAdd = () => {
+    setShowForm(true);
+    setIsEdit(false);
+    setId(null);
+  };
+
+  const handleEdit = (id) => {
+    setShowForm(true);
+    setIsEdit(true);
+    setId(id);
+  };
+  const handleView = (id) => {
+    setShowForm(true);
+    setIsEdit(false);
+    setId(id);
+  };
+
   const handleCloseForm = useCallback(() => {
     setShowForm(false);
-    setEditingId(0);
+    setIsEdit(false);
+    setId(0);
   }, []);
 
   useEffect(() => {
@@ -22,9 +42,13 @@ const TellersManage = () => {
   }, [handleCloseForm]);
 
   const getData = async (keyword) => {
-    // const res = await UserService.getUsers(keyword);
-    const res = users;
-    setData(res);
+    try {
+      const res = await UserService.getUserByRole("staffTrans", keyword);
+
+      setData(res);
+    } catch (error) {
+      setData([]);
+    }
   };
 
   const columns = useMemo(() => {
@@ -43,7 +67,10 @@ const TellersManage = () => {
         render: (_, record) => {
           return (
             <Space>
-              <Button icon={<EyeFilled />} />
+              <Button
+                icon={<EyeFilled />}
+                onClick={() => handleView(record._id)}
+              />
               <Button
                 onClick={() => handleEdit(record._id)}
                 icon={<EditOutlined />}
@@ -74,10 +101,6 @@ const TellersManage = () => {
     await getData(keyword);
   };
 
-  const handleAdd = () => {
-    setShowForm(true);
-  };
-
   const handleDelete = async (id) => {
     try {
       await UserService.deleteUserById(id);
@@ -94,10 +117,6 @@ const TellersManage = () => {
     }
   };
 
-  const handleEdit = (id) => {
-    setShowForm(true);
-    setEditingId(id);
-  };
   return (
     <>
       <PageHeader title={"Giao dịch viên"} />
@@ -111,8 +130,13 @@ const TellersManage = () => {
       <TellerForm
         open={showForm}
         onCancel={handleCloseForm}
-        title={(editingId ? "Chỉnh sửa" : "Thêm") + " tài khoản"}
-        id={editingId}
+        title={
+          (isEdit && id ? "Chỉnh sửa" : id ? "Xem" : "Thêm") + " tài khoản"
+        }
+        id={id}
+        isEdit={isEdit}
+        setIsEdit={setIsEdit}
+        getData={getData}
       />
     </>
   );

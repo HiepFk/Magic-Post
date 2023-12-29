@@ -49,14 +49,8 @@ exports.getUserByRole = async (req, res) => {
     });
 };
 exports.showAllUser = (req, res) => {
-  if (req.query.keyword) {
-    User.find({ username: req.query.keyword })
-      .then((users) => {
-        return res.json(users);
-      })
-      .catch((err) => res.json(err));
-  }
-  User.find()
+  const keyword = req.query.keyword ?? "";
+  User.find({ userName: { $regex: keyword } })
     .then((users) => {
       return res.json(users);
     })
@@ -66,81 +60,31 @@ exports.showAllUser = (req, res) => {
 // Create admin
 exports.createUser = (req, res) => {
   //Valid request
-  const user = new User({
-    ...req.body,
-    password: bcrypt.hashSync(req.body.password, 8),
-  });
-
-  user.save((err, user) => {
-    if (err) {
-      res.status(500).send({ message: err });
-      return;
-    }
-    Role.findOne(
-      {
-        name: req.body.role,
-      },
-      (err, role) => {
+  Role.findOne(
+    {
+      name: req.body.role,
+    },
+    (err, role) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send({ message: err });
+        return;
+      }
+      const user = new User({
+        ...req.body,
+        password: bcrypt.hashSync(req.body.password, 8),
+      });
+      user.role = role._id;
+      user.save((err) => {
         if (err) {
           res.status(500).send({ message: err });
           return;
         }
 
-        user.role = role._id;
-        user.save((err) => {
-          if (err) {
-            res.status(500).send({ message: err });
-            return;
-          }
-
-          //res.send({ message: "User was registered successfully!" });
-        });
-      }
-    );
-    res.send({ message: "Create user successfully!" });
-
-    // if (req.body.roles) {
-    //   Role.find(
-    //     {
-    //       name: { $in: req.body.roles },
-    //     },
-    //     (err, roles) => {
-    //       if (err) {
-    //         res.status(500).send({ message: err });
-    //         return;
-    //       }
-
-    //       user.roles = roles.map((role) => role._id);
-    //       user.save((err) => {
-    //         if (err) {
-    //           res.status(500).send({ message: err });
-    //           return;
-    //         }
-
-    //         //res.send({ message: "User was registered successfully!" });
-    //       });
-    //     }
-    //   );
-    // } else {
-    //   Role.findOne({ name: user.roleName }, (err, role) => {
-    //     if (err) {
-    //       res.status(500).send({ message: err });
-    //       return;
-    //     }
-
-    //     user.roles = role._id;
-    //     user.save((err) => {
-    //       if (err) {
-    //         res.status(500).send({ message: err });
-    //         return;
-    //       }
-    //       //gửi mật khẩu và tài khoản về email.
-
-    //       res.send({ message: "Create user successfully!" });
-    //     });
-    //   });
-    // }
-  });
+        res.send({ message: "Create user successfully!" });
+      });
+    }
+  );
 };
 
 //tìm tất cả danh sách theo cái gì đây ????

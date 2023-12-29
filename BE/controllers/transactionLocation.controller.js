@@ -137,8 +137,9 @@ exports.deleteAll = (req, res) => {
 
 //Find all TransactionLocation
 exports.showAllTransLoca = (req, res) => {
-  TransactionLocation.find()
-    .then((users) => res.json(users))
+  const keyword = req.query.keyword ?? "";
+  TransactionLocation.find({ nameTrans: { $regex: keyword } })
+    .then((data) => res.json(data))
     .catch((err) => res.json(err));
 };
 // Find all theo role

@@ -11,6 +11,7 @@ const Role = {
   managerGather: "managerGather",
   managerTrans: "managerTrans",
   staffTrans: "staffTrans",
+  user: "user",
 };
 
 const RoleName = {
@@ -18,6 +19,7 @@ const RoleName = {
   [Role.managerGather]: "Trưởng điểm tập kết",
   [Role.managerTrans]: "Trưởng điểm giao dịch",
   [Role.staffTrans]: "Giao dịch viên",
+  [Role.user]: "Người dùng",
 };
 
 const AdminMenuItems = [

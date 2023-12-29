@@ -5,7 +5,15 @@ import UserService from "../../../services/user.service";
 import users from "../../../utils/fakeData/User";
 import { Role } from "../../../constants";
 
-export default function TellerForm({ title, open, onCancel, id }) {
+export default function TellerForm({
+  title,
+  open,
+  onCancel,
+  id,
+  isEdit,
+  setIsEdit,
+  getData,
+}) {
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -14,8 +22,7 @@ export default function TellerForm({ title, open, onCancel, id }) {
 
   const getInitalValues = async () => {
     if (id) {
-      //   const user = await UserService.getUserById(id);
-      const user = users[id - 1];
+      const user = await UserService.getUserById(id);
       form.setFieldValue("username", user.username);
       form.setFieldValue("email", user.email);
     } else {
@@ -24,6 +31,10 @@ export default function TellerForm({ title, open, onCancel, id }) {
   };
 
   const handleSubmit = () => {
+    if (!isEdit && id) {
+      setIsEdit(true);
+      return;
+    }
     form.submit();
   };
 
@@ -45,6 +56,7 @@ export default function TellerForm({ title, open, onCancel, id }) {
           duration: 1,
         });
       }
+      getData();
       onCancel();
     } catch (error) {
       notification.error({
@@ -54,18 +66,33 @@ export default function TellerForm({ title, open, onCancel, id }) {
     }
   };
   return (
-    <Modal open={open} title={title} onCancel={onCancel} onOk={handleSubmit}>
+    <Modal
+      open={open}
+      title={title}
+      onCancel={onCancel}
+      onOk={handleSubmit}
+      okText={id && !isEdit ? "Edit" : "Save"}
+    >
       <Form form={form} layout="vertical" onFinish={handleFinish}>
         <Form.Item
           name="username"
           label="Tên người dùng"
           rules={[{ required: true }]}
         >
-          <Input />
+          <Input disabled={!isEdit && id} />
         </Form.Item>
         <Form.Item name="email" label="Email" rules={[{ required: true }]}>
-          <Input />
+          <Input disabled={!isEdit && id} />
         </Form.Item>
+        {!isEdit && !id && (
+          <Form.Item
+            name="password"
+            label="Mật khẩu"
+            rules={[{ required: true }]}
+          >
+            <Input.Password />
+          </Form.Item>
+        )}
       </Form>
     </Modal>
   );

@@ -37,7 +37,7 @@ const getUsers = (keyword) => {
   });
 };
 
-const getUserByRole = (role) => {
+const getUserByRole = (role, keyword) => {
   return instance.get(`${url}/getUserByRole/${role}`);
 };
 const getUserById = (id) => {

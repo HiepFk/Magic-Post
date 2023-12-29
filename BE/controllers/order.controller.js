@@ -7,23 +7,24 @@ const EmailService = require("../services/email.service");
 const TransactionLocation = db.TransactionLocation;
 
 exports.createOrderOrigin = (req, res) => {
-  const order = new Order({
-    name: req.body.name,
-    title: req.body.title,
-    receiveIf: req.body.receiveIf,
-    sendIf: req.body.sendIf,
-    addressIfR: req.body.addressIfR,
-    addressIfS: req.body.addressIfS,
-    typeOrder: req.body.typeOrder,
-    contentValue: req.body.contentValue,
-    describeOrder: req.body.describeOrder,
-    specialService: req.body.specialService,
-    status: req.body.status,
-    timeReceive: req.body.timeReceive, // Đi tìm kiểu dữ liệu của time.
-    price: req.body.price, //Kiểu number trong js có được dùng thập phân, nó có thể chạy được từ đâu đến đâu
-    paided: req.body.paided,
-    isDeliveSuccess: req.body.isDeliveSuccess,
-  });
+  // const order = new Order({
+  //   name: req.body.name,
+  //   title: req.body.title,
+  //   receiveIf: req.body.receiveIf,
+  //   sendIf: req.body.sendIf,
+  //   addressIfR: req.body.addressIfR,
+  //   addressIfS: req.body.addressIfS,
+  //   typeOrder: req.body.typeOrder,
+  //   contentValue: req.body.contentValue,
+  //   describeOrder: req.body.describeOrder,
+  //   specialService: req.body.specialService,
+  //   status: req.body.status,
+  //   timeReceive: req.body.timeReceive, // Đi tìm kiểu dữ liệu của time.
+  //   price: req.body.price, //Kiểu number trong js có được dùng thập phân, nó có thể chạy được từ đâu đến đâu
+  //   paided: req.body.paided,
+  //   isDeliveSuccess: req.body.isDeliveSuccess,
+  // });
+  const order = new Order(req.body);
 
   //Save new order
   order
@@ -114,7 +115,7 @@ exports.createOrderTransS = (req, res) => {
 };
 
 exports.findOneOrder = (req, res) => {
-  const id = req.params._id;
+  const id = req.params.id;
 
   Order.findById(id)
     .then((data) => {
@@ -135,7 +136,7 @@ exports.updateOrder = (req, res) => {
     });
   }
 
-  const id = req.params._id;
+  const id = req.params.id;
   Order.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
     .then((data) => {
       if (!data)
