@@ -7,12 +7,14 @@ import {
   Radio,
   Space,
   Typography,
+  notification,
 } from "antd";
 import { useEffect, useState } from "react";
 import { orders } from "../utils/fakeData/Order";
-import { formMessages } from "../constants/messages";
+import { formMessages, notiMessages } from "../constants/messages";
+import OrderService from "../services/order.service";
 
-export default function OrderForm({ title, open, onCancel, id }) {
+export default function OrderForm({ title, open, onCancel, id, getData }) {
   const [form] = Form.useForm();
   const [initialValues, setInitialValues] = useState({});
 
@@ -25,27 +27,51 @@ export default function OrderForm({ title, open, onCancel, id }) {
   }, [initialValues]);
 
   const getInitialData = async () => {
-    const order = orders.find((o) => o.idOrder === id);
-    const o = { ...order };
-    const [width, height, length] = o.size?.split("x");
-    o.size = {
-      width,
-      height,
-      length,
-    };
-
-    setInitialValues(o);
+    try {
+      const res = await OrderService.getOrderById(id);
+      const [width, height, length] = res?.size?.split("x");
+      res.size = {
+        width,
+        height,
+        length,
+      };
+      setInitialValues(res);
+    } catch (error) {
+      setInitialValues();
+    }
   };
 
   const handleSubmit = () => {
     form.submit();
   };
 
-  const handleFinish = (values) => {
-    values.size = Object.values(values.size)
-      .map((s) => s ?? 0)
-      .join("x");
-    console.log(values);
+  const handleFinish = async (values) => {
+    try {
+      values.size = Object.values(values.size)
+        .map((s) => s ?? 0)
+        .join("x");
+      if (!id) {
+        values.status = "NEW";
+        const res = await OrderService.createOrderOrigin(values);
+        notification.success({
+          message: notiMessages.createSuccessfully,
+          duration: 1,
+        });
+      } else {
+        const res = await OrderService.updateOrder(id, values);
+        notification.success({
+          message: notiMessages.updateSuccessfully,
+          duration: 1,
+        });
+      }
+      onCancel();
+      getData();
+    } catch (error) {
+      notification.error({
+        message: notiMessages.error,
+        duration: 1,
+      });
+    }
   };
   return (
     <Modal

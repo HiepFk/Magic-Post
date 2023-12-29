@@ -24,7 +24,7 @@ const OrderHistory = mongoose.model(
         type: mongoose.Schema.Types.ObjectId,
         ref: "GatheringLocation",
       },
-      status: Boolean,
+      status: String,
     },
     {
       timestamps: true,

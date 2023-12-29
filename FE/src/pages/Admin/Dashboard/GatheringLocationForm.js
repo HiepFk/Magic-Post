@@ -46,10 +46,10 @@ export default function GatheringLocationForm({
       form.setFieldValue("phone", gatheringLocation.phone);
       form.setFieldValue("email", gatheringLocation.email);
       form.setFieldValue("address", gatheringLocation.address);
-      // form.setFieldValue(
-      //   "managerNameGather",
-      //   gatheringLocation.managerGather.username
-      // );
+      form.setFieldValue(
+        "managerGather",
+        gatheringLocation.managerGather.username
+      );
     } else {
       form.resetFields();
     }

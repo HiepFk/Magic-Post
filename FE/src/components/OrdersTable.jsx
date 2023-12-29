@@ -1,10 +1,21 @@
-import { Button, Flex, Select, Space, Switch, Table, Typography } from "antd";
+import {
+  Button,
+  Flex,
+  Select,
+  Space,
+  Switch,
+  Table,
+  Typography,
+  notification,
+} from "antd";
 import ActionsCell from "./ActionsCell";
 import { useEffect, useMemo, useState } from "react";
 import { OrderStatus, orders } from "../utils/fakeData/Order";
 import SearchBox from "./SearchBox";
 import OrderDetailModal from "./OrderDetailModal";
 import OrderForm from "./OrderForm";
+import OrderService from "../services/order.service";
+import { notiMessages } from "../constants/messages";
 
 export default function OrdersTable({ status, placeType = "TRANSAC_LOCAL" }) {
   const [data, setData] = useState([]);
@@ -18,13 +29,21 @@ export default function OrdersTable({ status, placeType = "TRANSAC_LOCAL" }) {
   }, [status]);
 
   const getData = async () => {
-    const os = orders.filter((order) => order.status === status);
-    setData(os);
+    try {
+      const res = await OrderService.getOrderByStatus(status);
+      setData(res);
+    } catch (error) {
+      setData([]);
+    }
   };
 
-  const handleShow = (id) => {
-    const order = data.find((item) => item.idOrder === id);
-    setShowOrder(order);
+  const handleShow = async (id) => {
+    try {
+      const res = await OrderService.getOrderById(id);
+      setShowOrder(res);
+    } catch (error) {
+      setShowOrder();
+    }
   };
   const handleReceived = (orderId) => {};
 
@@ -34,13 +53,29 @@ export default function OrdersTable({ status, placeType = "TRANSAC_LOCAL" }) {
     setEditOrderId(orderId);
   };
 
+  const handeDelete = async (id) => {
+    try {
+      const res = await OrderService.deleteOrderById(id);
+      getData();
+      notification.success({
+        message: notiMessages.deleteSuccessfully,
+        duration: 1,
+      });
+    } catch (error) {
+      notification.error({
+        message: notiMessages.error,
+        duration: 1,
+      });
+    }
+  };
+
   const columns = useMemo(() => {
     const toStatus = status.match(new RegExp(/^TO_\w+?/));
     const newStatus = status === OrderStatus.new;
     return [
       {
         title: "Mã đơn",
-        dataIndex: "idOrder",
+        dataIndex: "_id",
       },
       {
         title: "Tên đơn",
@@ -97,7 +132,7 @@ export default function OrdersTable({ status, placeType = "TRANSAC_LOCAL" }) {
         title: "Đã nhận",
         dataIndex: "orderStatus",
         render: (_, record) => {
-          return <Switch onChange={() => handleReceived(record.idOrder)} />;
+          return <Switch onChange={() => handleReceived(record?._id)} />;
         },
         hidden: !toStatus,
       },
@@ -108,8 +143,9 @@ export default function OrdersTable({ status, placeType = "TRANSAC_LOCAL" }) {
           return (
             <ActionsCell
               record={record}
-              onShow={() => handleShow(record.idOrder)}
-              onEdit={() => handleEdit(record.idOrder)}
+              onShow={() => handleShow(record?._id)}
+              onEdit={() => handleEdit(record?._id)}
+              onDelete={() => handeDelete(record?._id)}
               hasDelete={status === OrderStatus.new}
               hasEdit={status === OrderStatus.new}
             />
@@ -185,6 +221,7 @@ export default function OrdersTable({ status, placeType = "TRANSAC_LOCAL" }) {
           title={editOrderId ? "Chỉnh sửa đơn hàng" : "Thêm đơn hàng"}
           open={editOrderId || showAddForm}
           onCancel={handleCancelForm}
+          getData={getData}
           id={editOrderId}
         />
       )}

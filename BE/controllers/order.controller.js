@@ -33,6 +33,7 @@ exports.createOrderOrigin = (req, res) => {
       res.send(data);
     })
     .catch((err) => {
+      console.log(11111, err);
       res.status(500).send({
         message: err.message || "Some error ocurred while creating the order.",
       });
@@ -52,6 +53,7 @@ exports.createOrderOrigin = (req, res) => {
     //   //res.send(data);
     // })
     .catch((err) => {
+      console.log(222222, err);
       res.status(500).send({
         message:
           err.message || "Some error ocurred while creating the order history.",
@@ -135,7 +137,6 @@ exports.updateOrder = (req, res) => {
       message: "Data to update can not be empty!",
     });
   }
-
   const id = req.params.id;
   Order.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
     .then((data) => {
@@ -243,3 +244,38 @@ exports.countOrderReceive = (req, res) => {
 //Đếm số lượng hàng nhận đc == sô lượng transStart true, gatherStart true
 
 //Đếm số lượng trả đi tại điểm tập kết chính là giao dịch đảm bảo đúng, điểm tập kết tiếp theo cf
+
+exports.getOrderByStatus = async (req, res) => {
+  Order.find({ status: req.params.status })
+    .then((data) => {
+      res.send(data);
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message:
+          err.message || "Some error occurred while retrieving staffGather.",
+      });
+    });
+};
+
+exports.deleteOrder = (req, res) => {
+  const id = req.params.id;
+
+  Order.findByIdAndRemove(id, { useFindAndModify: false })
+    .then((data) => {
+      if (!data) {
+        res.status(404).send({
+          message: `Cannot delete User with id=${id}. Maybe Order was not found!`,
+        });
+      } else {
+        res.send({
+          message: "Order was deleted successfully!",
+        });
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: "Could not delete Order with id=" + id,
+      });
+    });
+};

@@ -24,7 +24,7 @@ export default function OrderDetailModal({ showOrder, onCancel }) {
       {" "}
       <Modal open={Boolean(showOrder)} onCancel={onCancel} footer={null}>
         <Typography.Title level={4}>{showOrder.title}</Typography.Title>
-        <Typography.Text>Mã đơn: {showOrder.idOrder}</Typography.Text>
+        <Typography.Text>Mã đơn: {showOrder._id}</Typography.Text>
         <Divider style={{ marginTop: ".5rem" }} />
         <Flex vertical gap={4}>
           <Space>

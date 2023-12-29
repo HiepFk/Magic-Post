@@ -20,6 +20,12 @@ const Order = mongoose.model(
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
       },
+      giverName: String,
+      giverPhone: String,
+      receiverName: String,
+      receiverPhone: String,
+      addressIfS: String,
+      addressIfR: String,
 
       // transLocaStart: {
       //     timeTransStart: {
@@ -73,6 +79,12 @@ const Order = mongoose.model(
       price: Number, //Kiểu number trong js có được dùng thập phân, nó có thể chạy được từ đâu đến đâu
       paided: Number,
       isDeliveSuccess: Boolean,
+      mainPrice: Number,
+      extraPrice: Number,
+      specialServer: String, //
+      kg: String, //
+      weight: String, //
+      size: String,
     },
     { timestamps: true }
   )

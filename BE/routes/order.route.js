@@ -9,7 +9,13 @@ router.route("/createOrderTransS").post(controlOrder.createOrderTransS);
 // router.route("/createOrderGatherF").post(controlOrder.createOrderGatherF);
 // router.route("/createOrderTransF").post(controlOrder.createOrderTransF);
 
-router.route("/findOneOrder").get(controlOrder.findOneOrder);
+router.route("/getOrderByStatus/:status").get(controlOrder.getOrderByStatus);
+
+router.route("/:id").get(controlOrder.findOneOrder);
+
+router.route("/:id").patch(controlOrder.updateOrder);
+
+router.route("/:id").delete(controlOrder.deleteOrder);
 
 router.route("/findAllOrderGatherS").get(controlOrder.findAllOrderGatherS);
 
@@ -28,8 +34,6 @@ router
   .get(controlOrder.countOrderTransSuccessGatherNext);
 
 router.route("/countOrderReceive").get(controlOrder.countOrderReceive);
-
-router.route("/updateOrder").put(controlOrder.updateOrder);
 
 module.exports = router;
 
