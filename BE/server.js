@@ -10,7 +10,7 @@ const userRoute = require("./routes/user.route");
 const authRoute = require("./routes/auth.route");
 const orderRoute = require("./routes/order.route");
 const gatheringLocationRoute = require("./routes/gatheringLocation.route");
-const transactionLocationRoute = require("./routes/transactionLocation.route");
+// const transactionLocationRoute = require("./routes/transactionLocation.route");
 
 const app = express();
 
@@ -58,7 +58,7 @@ app.use("/api/v1/user", userRoute);
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/order", orderRoute);
 app.use("/api/v1/gatheringLocation", gatheringLocationRoute);
-app.use("/api/v1/transactionLocation", transactionLocationRoute);
+// app.use("/api/v1/transactionLocation", transactionLocationRoute);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;
