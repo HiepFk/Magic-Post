@@ -7,7 +7,6 @@ import Middleware from "./middlewares/Middleware";
 import Login from "./pages/Auth/Login";
 import AdminDashboard from "./pages/Admin/Dashboard";
 import AuthContext from "./contexts/AuthContext";
-import Dashboard from "./pages/DashBoard";
 import {
   AdminMenuItems,
   ManagerTransMenuItems,
@@ -19,7 +18,9 @@ import TransLocalManage from "./pages/Admin/TransLocalManage";
 import AccountsManage from "./pages/Admin/AccountsManage";
 import TellersManage from "./pages/TransPointLeader/TellersManage";
 import OrdersManage from "./pages/Teller/OrdersManage";
-
+import OrderTimeLine from "./pages/User/OrderTimeLine";
+import OrderHistory from "./pages/User/OrderHistory";
+// import AdminStatical from "./pages/Admin/Stastiscal";
 const App = () => {
   const { setUser } = useContext(AuthContext);
   useEffect(() => {
@@ -41,6 +42,15 @@ const App = () => {
       <Route exact path="/sign-in" element={<Login />} />
       <Route path="/" element={<DefaultLayout menuItems={UserMenuItems} />} />
       <Route
+        path="user"
+        element={<DefaultLayout menuItems={UserMenuItems} />}
+      >
+        <Route path="" element={<Middleware role={Role.user} />}>
+          <Route path="don-dang-giao" element={<OrderTimeLine />} />
+          <Route path="diem-da-nhan" element={<OrderHistory />} />
+        </Route>
+      </Route>
+      <Route
         path="admin"
         element={<DefaultLayout menuItems={AdminMenuItems} />}
       >
@@ -48,6 +58,7 @@ const App = () => {
           <Route path="diem-tap-ket" element={<AdminDashboard />} />
           <Route path="diem-giao-dich" element={<TransLocalManage />} />
           <Route path="tai-khoan" element={<AccountsManage />} />
+          {/* <Route path="thong-ke" element={<AdminStatical />} /> */}
         </Route>
       </Route>
       <Route

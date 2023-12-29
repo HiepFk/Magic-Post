@@ -11,7 +11,7 @@ const Role = {
   managerGather: "managerGather",
   managerTrans: "managerTrans",
   staffTrans: "staffTrans",
-  user: "user",
+  user: "user"
 };
 
 const RoleName = {
@@ -19,7 +19,7 @@ const RoleName = {
   [Role.managerGather]: "Trưởng điểm tập kết",
   [Role.managerTrans]: "Trưởng điểm giao dịch",
   [Role.staffTrans]: "Giao dịch viên",
-  [Role.user]: "Người dùng",
+  [Role.user]: "Người dùng"
 };
 
 const AdminMenuItems = [
@@ -65,9 +65,13 @@ const TellerMenuItems = [
 
 const UserMenuItems = [
   {
-    key: "nav-1",
-    label: "Nav 1",
+    key: "don-dang-giao",
+    label: "Đơn đang giao",
   },
+  {
+    key: "don-da-nhan",
+    label: "Đơn đã nhận",
+  }
 ];
 
 const OrderFromThisStepsItems = [
