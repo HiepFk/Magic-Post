@@ -5,7 +5,7 @@ import UserService from "../../services/user.service";
 import users from "../../utils/fakeData/User";
 import { Role } from "../../constants";
 
-export default function ManageGatherStaffForm({
+export default function OrderHistoryForm({
   title,
   open,
   onCancel,

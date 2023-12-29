@@ -9,9 +9,10 @@ const MenuItemKey = {
 const Role = {
   owner: "admin",
   managerGather: "managerGather",
+  staffGather: "staffGather",
   managerTrans: "managerTrans",
   staffTrans: "staffTrans",
-  user: "user"
+  user: "user",
 };
 
 const RoleName = {
@@ -19,7 +20,8 @@ const RoleName = {
   [Role.managerGather]: "Trưởng điểm tập kết",
   [Role.managerTrans]: "Trưởng điểm giao dịch",
   [Role.staffTrans]: "Giao dịch viên",
-  [Role.user]: "Người dùng"
+  [Role.staffGather]: "Tập kết viên",
+  [Role.user]: "Người dùng",
 };
 
 const AdminMenuItems = [
@@ -63,6 +65,28 @@ const TellerMenuItems = [
   },
 ];
 
+const ManagerGatherMenuItems = [
+  {
+    key: "tap-ket-vien",
+    label: "Tập kết viên",
+  },
+  {
+    key: "thong-ke",
+    label: "Thống kê",
+  },
+];
+
+const StaffGatherMenuItems = [
+  {
+    key: "don-hang",
+    label: "Đơn hàng",
+  },
+  {
+    key: "thong-ke",
+    label: "Thống kê",
+  },
+];
+
 const UserMenuItems = [
   {
     key: "don-dang-giao",
@@ -71,7 +95,7 @@ const UserMenuItems = [
   {
     key: "don-da-nhan",
     label: "Đơn đã nhận",
-  }
+  },
 ];
 
 const OrderFromThisStepsItems = [
@@ -86,6 +110,25 @@ const OrderFromThisStepsItems = [
   {
     title: "Đã được nhận",
     orderStatus: OrderStatus.atStartGatherLocal,
+  },
+];
+
+const OrderUserTimeLine = [
+  {
+    title: "Đơn hàng vừa gửi",
+    orderStatus: OrderStatus.new,
+  },
+  {
+    title: "Đơn hàng ở điểm giao dịch",
+    orderStatus: OrderStatus.atStartGatherLocal,
+  },
+  {
+    title: "Đơn hàng ở điểm tập kết",
+    orderStatus: OrderStatus.atEndGatherLocal,
+  },
+  {
+    title: "Đơn hàng đã hoàn thành",
+    orderStatus: OrderStatus.toCustomer,
   },
 ];
 
@@ -174,4 +217,7 @@ export {
   OrderTabs,
   DeliverFailedOrderStepsItems,
   ReturnOrderStepsItems,
+  OrderUserTimeLine,
+  StaffGatherMenuItems,
+  ManagerGatherMenuItems
 };

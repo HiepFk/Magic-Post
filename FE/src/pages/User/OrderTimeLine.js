@@ -1,50 +1,27 @@
-import React, {useEffect, useState } from "react";
-import { OrderStatusDisplay, orders } from "../../utils/fakeData/Order";
-import { Steps } from "antd";
+import React, { useEffect, useState } from "react";
+import PageHeader from "../../components/PageHeader";
+import { Tabs } from "antd";
+import { OrderTabs, OrderUserTimeLine } from "../../constants";
+import OrderSteps from "../../components/OrderSteps";
+import UserOrdersTable from "../../components/UserOrderTable";
 
 const description = "";
 
 const OrderTimeLine = () => {
-  // const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  // const [data, setData] = useState([]);
+  const [currentTab, setCurrentTab] = useState(OrderTabs[0].key);
 
-  useEffect(() => {
-    //getData();
-  }, []);
-
-  // const getData = async () => {
-  //   const stepItems = orders.map((order) => ({
-  //     description: OrderStatusDisplay[order.status]?.label,
-  //   }));
-  //   setData(stepItems);
-  // };
-
+  const handleChangeTab = (key) => {
+    setCurrentTab(key);
+  };
   return (
     <>
-      {/* <Steps current={1} items={data} />{" "} */}
-      <h1>Tên đơn
-      <Steps
-    current={1}
-    items={[
-      {
-        title: 'Finished',
-        description: "Điểm giao dịch đầu",
-      },
-      {
-        title: 'Finished',
-        description: "Điểm tập kết đầu",
-      },
-      {
-        title: 'In Progress',
-        description: "Điểm giao dịch cuối",
-      },
-      {
-        title: 'Waiting',
-        description: "Giao người nhận",
-      },
-    ]}
-  />
-  </h1>
+      <PageHeader title={"Đơn hàng của bạn"} />
+      {currentTab === OrderTabs[0].key && (
+        <OrderSteps
+          tableComponent={UserOrdersTable}
+          items={OrderUserTimeLine}
+        />
+      )}
     </>
   );
 };

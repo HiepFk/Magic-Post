@@ -1,15 +1,12 @@
 import { Button, Flex, Select, Space, Switch, Table, Typography } from "antd";
-import ActionsCell from "../../components/ActionsCell";
-import { useEffect, useMemo, useState, React } from "react";
-import { doneOrders } from "../../utils/fakeData/Order";
-import SearchBox from "../../components/SearchBox";
-import OrderDetailModal from "../../components/OrderDetailModal";
-import OrderForm from "../../components/OrderForm";
-import PageHeader from "../../components/PageHeader";
+import ActionsCell from "./ActionsCell";
+import { useEffect, useMemo, useState } from "react";
+import { OrderStatus, orders, userOrders } from "../utils/fakeData/Order";
+import SearchBox from "./SearchBox";
+import OrderDetailModal from "./OrderDetailModal";
+import OrderForm from "./OrderForm";
 
-const { Column, ColumnGroup } = Table;
-
-const OrderHistory = () => {
+export default function UserOrdersTable({ status, placeType = "TRANSAC_LOCAL" }) {
   const [data, setData] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [showOrder, setShowOrder] = useState();
@@ -18,10 +15,11 @@ const OrderHistory = () => {
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [status]);
 
   const getData = async () => {
-    setData(doneOrders);
+    const os = userOrders.filter((order) => order.status === status);
+    setData(os);
   };
 
   const handleShow = (id) => {
@@ -37,6 +35,8 @@ const OrderHistory = () => {
   };
 
   const columns = useMemo(() => {
+    const toStatus = status.match(new RegExp(/^TO_\w+?/));
+    const newStatus = status === OrderStatus.new;
     return [
       {
         title: "Mã đơn",
@@ -59,16 +59,17 @@ const OrderHistory = () => {
         dataIndex: "addressIfS",
       },
       {
+        title: "Trạng thái",
+        dataIndex: "status",
+        hidden: !newStatus,
+      },
+      {
         title: "Điểm giao dịch",
         dataIndex: "transAddress",
       },
       {
         title: "Điểm tập kết",
         dataIndex: "gatherAddress",
-      },
-      {
-        title: "Thời điểm giao đến",
-        dataIndex: "timeGatherEnd",
       },
       {
         title: "Thao tác",
@@ -79,6 +80,8 @@ const OrderHistory = () => {
               record={record}
               onShow={() => handleShow(record.idOrder)}
               onEdit={() => handleEdit(record.idOrder)}
+              hasDelete={status === OrderStatus.new}
+              hasEdit={status === OrderStatus.new}
             />
           );
         },
@@ -105,7 +108,6 @@ const OrderHistory = () => {
   };
   return (
     <>
-      <PageHeader title={"Đơn hàng đã nhận của bạn"} />
       <Space direction="vertical" style={{ width: "100%" }}>
         <Flex
           justify="space-between"
@@ -126,7 +128,10 @@ const OrderHistory = () => {
         <Flex justify="space-between">
           <SearchBox onSearch={handleSearch} />
         </Flex>
-        <Table columns={columns} dataSource={data} />
+        <Table
+          columns={columns}
+          dataSource={data}
+        />
       </Space>
       {showOrder && (
         <OrderDetailModal
@@ -144,6 +149,4 @@ const OrderHistory = () => {
       )}
     </>
   );
-};
-
-export default OrderHistory;
+}

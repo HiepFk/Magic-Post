@@ -13,10 +13,13 @@ import {
   Role,
   TellerMenuItems,
   UserMenuItems,
+  StaffGatherMenuItems,
+  ManagerGatherMenuItems,
 } from "./constants";
 import TransLocalManage from "./pages/Admin/TransLocalManage";
 import AccountsManage from "./pages/Admin/AccountsManage";
 import TellersManage from "./pages/TransPointLeader/TellersManage";
+import ManageGatherStaff from "./pages/GatherPointLeader/index"
 import OrdersManage from "./pages/Teller/OrdersManage";
 import OrderTimeLine from "./pages/User/OrderTimeLine";
 import OrderHistory from "./pages/User/OrderHistory";
@@ -41,13 +44,10 @@ const App = () => {
       {/* <Route exact path="/sign-up" element={<SignUp />} /> */}{" "}
       <Route exact path="/sign-in" element={<Login />} />
       <Route path="/" element={<DefaultLayout menuItems={UserMenuItems} />} />
-      <Route
-        path="user"
-        element={<DefaultLayout menuItems={UserMenuItems} />}
-      >
+      <Route path="user" element={<DefaultLayout menuItems={UserMenuItems} />}>
         <Route path="" element={<Middleware role={Role.user} />}>
           <Route path="don-dang-giao" element={<OrderTimeLine />} />
-          <Route path="diem-da-nhan" element={<OrderHistory />} />
+          <Route path="don-da-nhan" element={<OrderHistory />} />
         </Route>
       </Route>
       <Route
@@ -70,10 +70,26 @@ const App = () => {
         </Route>
       </Route>
       <Route
+        path="manager-gather"
+        element={<DefaultLayout menuItems={ManagerGatherMenuItems} />}
+      >
+        <Route path="" element={<Middleware role={Role.managerGather} />}>
+          <Route path="tap-ket-vien" element={<ManageGatherStaff />} />
+        </Route>
+      </Route>
+      <Route
         path="giao-dich-vien"
         element={<DefaultLayout menuItems={TellerMenuItems} />}
       >
         <Route element={<Middleware role={Role.staffTrans} />}>
+          <Route path="don-hang" element={<OrdersManage />} />
+        </Route>
+      </Route>
+      <Route
+        path="tap-ket-vien"
+        element={<DefaultLayout menuItems={StaffGatherMenuItems} />}
+      >
+        <Route element={<Middleware role={Role.staffGather} />}>
           <Route path="don-hang" element={<OrdersManage />} />
         </Route>
       </Route>

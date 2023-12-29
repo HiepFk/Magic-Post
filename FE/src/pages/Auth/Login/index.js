@@ -32,8 +32,14 @@ const Login = () => {
         case Role.managerTrans:
           navigate("/manager-trans/giao-dich-vien");
           break;
+        case Role.managerGather:
+          navigate("/manager-gather/tap-ket-vien");
+          break;
         case Role.staffTrans:
           navigate("/giao-dich-vien/don-hang");
+          break;
+        case Role.staffGather:
+          navigate("/tap-ket-vien/don-hang");
           break;
         default:
           navigate("/");
