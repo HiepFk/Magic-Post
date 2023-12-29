@@ -17,6 +17,7 @@ const UserSchema = new mongoose.Schema({
 UserSchema.pre(/^find/, function (next) {
   this.populate({
     path: "role",
+    
   });
   next();
 });

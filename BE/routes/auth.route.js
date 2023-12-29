@@ -8,6 +8,7 @@ const router = require("express").Router();
 router.route("/signin").post(controlAuth.signin);
 router.route("/signout").post(controlAuth.signout);
 router.route("/sendAccount").post(controlEmail.createEmail);
+router.route("/signup").post(controlAuth.signup);
 
 router.route("/userBoard").get(controlAuth.isUser);
 router.route("/adminBoard").get(controlAuth.isAdmin);

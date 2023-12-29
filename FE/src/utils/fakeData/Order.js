@@ -23,6 +23,15 @@ export const OrderStatus = {
   atReturnedGiver: "AT_RETURNED_GIVER",
 };
 
+export const OrderStatusDisplay = {
+  [OrderStatus.new]: {
+    label: "Mới",
+  },
+  [OrderStatus.toStartGatherLocal]: {
+    label: "Đang đến điểm tập kết ",
+  },
+};
+
 export const orders = [
   {
     idOrder: 1,
