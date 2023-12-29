@@ -41,7 +41,7 @@ export default function ManageGatherStaffForm({
   const handleFinish = async (values) => {
     try {
       if (!id) {
-        const data = { ...values, role: Role.staffTrans };
+        const data = { ...values, role: Role.staffGather };
         const res = await UserService.createUser(data);
 
         notification.success({

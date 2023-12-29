@@ -126,7 +126,7 @@ const TellersManage = () => {
           Thêm
         </Button>
       </Flex>
-      <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
+      <Table columns={columns} dataSource={data} />
       <TellerForm
         open={showForm}
         onCancel={handleCloseForm}

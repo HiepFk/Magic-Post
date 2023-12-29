@@ -7,7 +7,6 @@ import { notiMessages } from "../../constants/messages";
 import UserService from "../../services/user.service";
 import users from "../../utils/fakeData/User";
 import ManageGatherStaffForm from "./MangeGatherStaffForm";
-
 const ManageGatherStaff = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -127,7 +126,7 @@ const ManageGatherStaff = () => {
           Thêm
         </Button>
       </Flex>
-      <Table rowSelection={rowSelection} columns={columns} dataSource={data} />
+      <Table columns={columns} dataSource={data} />
       <ManageGatherStaffForm
         open={showForm}
         onCancel={handleCloseForm}
